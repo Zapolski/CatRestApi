@@ -11,22 +11,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.google.gson.Gson;
-//import com.google.gson.GsonBuilder;
 
 import by.zapolski.model.CatImage;
 import by.zapolski.model.DownloadResult;
 
+@Component
 public class CatService {
 
     public static final String TARGET_PATH = "c:/tempImages/";
     public static final String REQUEST = "https://api.thecatapi.com/v1/images/search?limit=";
-
-    public static void main(String[] args) throws IOException {
-    	CatService catService = new CatService();
-        System.out.println(catService.doGet(10));
-    }
+    public static final int LIMIT_IMAGES = 100;
 
     public List<DownloadResult> doGet(int count) throws IOException{
 
