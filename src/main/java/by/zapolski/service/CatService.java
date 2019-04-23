@@ -24,6 +24,8 @@ public class CatService {
     public static final String TARGET_PATH = "c:/tempImages/";
     public static final String REQUEST = "https://api.thecatapi.com/v1/images/search?limit=";
     public static final int LIMIT_IMAGES = 100;
+    public static final String REQUEST_PROPERTY_KEY = "User-Agent";
+    public static final String REQUEST_PROPERTY_VALUE = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
 
     public List<DownloadResult> doGet(int count) throws IOException{
 
@@ -43,21 +45,18 @@ public class CatService {
 
     private DownloadResult downloadImage(CatImage catImage) throws IOException {
 
-        DownloadResult downloadResult = new DownloadResult();
-
         String url = catImage.getUrl();
         String imageName = url.substring(url.lastIndexOf("/")+1);
-        URL link = new URL(url);
         
-		URLConnection tc = link.openConnection();
-		
-		tc.addRequestProperty("User-Agent",	"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
-		tc.connect();
-		
 		File dir = new File(TARGET_PATH);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
+        
+        URL link = new URL(url);
+		URLConnection tc = link.openConnection();
+		tc.addRequestProperty(REQUEST_PROPERTY_KEY,	REQUEST_PROPERTY_VALUE);
+		tc.connect();
 
 		try(InputStream in = tc.getInputStream()){
             Path target = Paths.get(TARGET_PATH+imageName);
@@ -66,8 +65,8 @@ public class CatService {
             }
         }
 
-        downloadResult.setLocation(TARGET_PATH);
-        
+		DownloadResult downloadResult = new DownloadResult();
+		downloadResult.setLocation(TARGET_PATH);
         downloadResult.setName(imageName);
         
         return downloadResult;
